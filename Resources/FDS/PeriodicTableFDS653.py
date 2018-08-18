@@ -2,6 +2,9 @@
 # https://github.com/firemodels/fds/blob/eff7cba5ef7e452d6b646f9e3293a5b0b7dfbd4f/Source/data.f90#L3687
 # https://github.com/firemodels/fds/blob/eff7cba5ef7e452d6b646f9e3293a5b0b7dfbd4f/Source/data.f90#L3804
 
+# Format:
+#   key is the element symbol
+#   value is a list containing FDS name and molecular weight
 PeriodicTable = {
     'H': ['HYDROGEN', 1.00794],
     'He': ['HELIUM', 4.002602],
