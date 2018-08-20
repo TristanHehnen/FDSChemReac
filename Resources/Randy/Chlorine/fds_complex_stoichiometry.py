@@ -1,17 +1,18 @@
 #!/usr/bin/python
 # Original author: McDermott
 # 08-02-2017
-# Adjusted form: Hehnen
+# Adjusted by: Hehnen
 # 08-18-2018
 # fds_complex_stoichiometry.py
 
-from __future__ import division # make floating point division default as in Matlab, e.g., 1/2=0.5
+from __future__ import division  # make floating point division default as in
+# Matlab, e.g., 1/2=0.5
 import math
 import numpy as np
 import scipy.special as sp
 import matplotlib.pyplot as plt
 from matplotlib import rc
-rc('font',**{'family':'sans-serif','sans-serif':['Helvetica'],'size':16})
+rc('font', **{'family': 'sans-serif', 'sans-serif': ['Helvetica'], 'size': 16})
 
 # define atomic weights
 W_C = 12.0107
@@ -57,15 +58,15 @@ E = np.array([[1, 2, 0, 0, 0, 0, 1, 1, 0, (1-X_H)],
               [0, 0, 2, 0, 0, 0, 0, 0, 1, 0      ]])
 
 print('Element matrix')
-print(E)
+print(E, '\n')
 
 
 # primitive species molecular weights
 A = np.array([W_C, W_H, W_O, W_N, W_Cl])
-W = np.dot(E.T,A)
+W = np.dot(E.T, A)
 
 print('Primitive species molecular weights')
-print(W)
+print(W, '\n')
 
 
 # define the mass fractions of the background air (grab from FDS .out file)
@@ -75,22 +76,22 @@ v_1[i_nitrogen]       = 0.763077
 v_1[i_water_vapor]    = 0.005149
 v_1[i_carbon_dioxide] = 0.000592
 print('Mass fractions of AIR')
-print(v_1)
+print(v_1, '\n')
 
 
 # convert to volume fractions
 W_1 = 1./np.sum(v_1/W)
 print('Molecular weight of AIR')
-print(W_1)
+print(W_1, '\n')
 
 v_1 = v_1*W_1/W
 v_1 = v_1/np.sum(v_1)
 print('Volume fractions of AIR')
-print(v_1)  # use these in new FDS input file, else atom balance error may
+print(v_1, '\n')  # use these in new FDS input file, else atom balance error may
 # occur!
 
-# define volume fractions of fuel mixture (assumed known)
 
+# define volume fractions of fuel mixture (assumed known)
 v_2 = np.zeros((n_species))
 v_2[i_methane]        = 92.2
 v_2[i_ethylene]       =  3.3
@@ -98,11 +99,11 @@ v_2[i_chlorine]       =  3.9
 v_2[i_carbon_dioxide] =  0.6
 v_2 = v_2/np.sum(v_2)
 print('Volume fractions of FUEL')
-print(v_2)
+print(v_2, '\n')
 
 W_2 = np.sum(v_2*W)
 print('Molecular weight of FUEL')
-print(W_2)
+print(W_2, '\n')
 
 
 # the reaction coefficients for the product primitive species temporarily
@@ -118,7 +119,7 @@ v_3[i_soot]            = W_2/W[i_soot]*y_Soot
 # linear system right hand side
 b = np.dot(E, v_2-v_3)
 print('b')
-print(b)
+print(b, '\n')
 
 
 # matrix
@@ -128,13 +129,13 @@ L = np.array([np.dot(E, v_1),
               E[:, i_hcl],
               E[:, i_nitrogen]]).T
 print('L')
-print(L)
+print(L, '\n')
 
 
 # % solve the system
 x = np.linalg.solve(L, b)
 print('x')
-print(x)
+print(x, '\n')
 
 
 nu_1                  = x[0]  # background stoichiometric coefficient
@@ -151,25 +152,25 @@ v_3 = v_3/nu_3  # normalized product volume fractions
 
 # check mass balance (should be 0)
 print('Mass balance')
-print(nu_1*np.sum(v_1*W) + nu_2*np.sum(v_2*W) + nu_3*np.sum(v_3*W))
+print(nu_1*np.sum(v_1*W) + nu_2*np.sum(v_2*W) + nu_3*np.sum(v_3*W), '\n')
 
 
 # print lumped reaction coefficients
 print('Lumped species reaction coefficients')
 print('nu_1 = ' + str(nu_1))
 print('nu_2 = ' + str(nu_2))
-print('nu_3 = ' + str(nu_3))
+print('nu_3 = ' + str(nu_3), '\n')
 
 
 # check primitive reaction coefficients
 print('Primitive species stoichiometry')
-print( nu_1*v_1 + nu_2*v_2 + nu_3*v_3)
+print(nu_1*v_1 + nu_2*v_2 + nu_3*v_3, '\n')
 
 
 # display fuel properties
 Z2Y = np.array([v_1, v_2, v_3]).T
 print('Z2Y (volume fractions)')
-print(Z2Y)
+print(Z2Y, '\n')
 
 
 # check atom balance
